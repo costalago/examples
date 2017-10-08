@@ -5,7 +5,7 @@ import string
 import timeit
 import os
 import numpy as np
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 def get_str(n):
     """ https://stackoverflow.com/questions/16308989/fastest-method-to-generate-big-random-string-with-lower-latin-letters """
@@ -103,6 +103,7 @@ class CounterSearcherParalell(CounterSearcher):
 
     def __init__(self, bowl):
         super(CounterSearcherParalell, self).__init__(bowl)
+        print("Creating process pool for {} processing cores.".format(cpu_count()))
         self.pool = Pool(cpu_count())
 
     def search(self, message):
@@ -158,9 +159,9 @@ counter_paralell_times = benchmark_range(counter_paralell, bowl, range(1,1000,10
 random = RandomSearcher(bowl)
 random_times = benchmark_range(random, bowl, range(1,1000,10))
 
-plt.plot(naive_times)
-plt.plot(counter_times)
-plt.plot(counter_pre_times)
-plt.plot(counter_paralell_times)
-plt.plot(random_times)
-plt.show()
+#plt.plot(naive_times)
+#plt.plot(counter_times)
+#plt.plot(counter_pre_times)
+#plt.plot(counter_paralell_times)
+#plt.plot(random_times)
+#plt.show()
