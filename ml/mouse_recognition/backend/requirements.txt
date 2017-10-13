@@ -1,0 +1,6 @@
+Pyro4==4.60
+keras==2.0.5
+numpy==1.13.0
+pandas==0.20.2
+tensorflow==1.2.0rc2
+h5py
