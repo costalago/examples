@@ -3,6 +3,7 @@
 This project is a web application that allows users to interact with a deep neural network that
 analyzes mouse input patterns. The neural network is based on a Fully Convolutional Network
 used for time series classification and it's based on this research paper: https://arxiv.org/abs/1611.06455 Time Series Classification from Scratch with Deep Neural Networks: A Strong Baseline
+(2017 state of the art: https://arxiv.org/abs/1709.05206)
 
 The project contains three folders:
 
