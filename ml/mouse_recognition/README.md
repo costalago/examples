@@ -8,8 +8,10 @@ The project contains three folders:
 
 model/ : Contains the neural network model and all the research and investigations that I had
 to do to train it.
+
 backend/ : Contains a core backend proccess that executes the neural network and receives input from
 the webapp backend
+
 webapp/ : Contains the backend and the frontend of the web application
 
 
