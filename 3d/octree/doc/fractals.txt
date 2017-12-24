@@ -1,0 +1,33 @@
+Sintetizar funciones aleatorias
+controlar propiedad: autocorrelation
+controlar propiedad: spectral properties
+generate functions with no-fractal spectra & directional | oscillatory
+The spectral model is more powerful & intuitive than the fractal model
+
+propiedades:
+-Limited descriptive power
+-Resolution may be adjusted locally
+-Internal consistency ?
+-No spatial order required when computing
+-External consistency: the function can be required to pass through given points, useful
+to provide seed data.
+-Computacionalmente barato
+
+Random process:
+https://en.wikipedia.org/wiki/Stochastic_process
+"A collection of random variables indexed by a set of numbers "index set", for example with time" ie brownian motion
+Also: random function: a vector in a space of functions
+Random field: when the index set is multidimensional , also called noise or texture in the paper
+
+
+- stationary/homogeneus (invariant to displacements in space or time)
+- isotropic (invariant to rotations)
+- ergodic (it isn't chaotic on generation)
+
+We will use homogeneous & ergodic
+
+En la pagina de la wiki del diamond algorithm hay una referencia al libro The science of Fractal images
+
+
+
+

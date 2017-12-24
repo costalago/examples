@@ -1,0 +1,35 @@
+-compact data structure for voxels
+-algorithm for ray casts with the structure
+-voxel data + contour information, mejor resolución, mas velocidad, menos espacio
+-normal compressión format
+-post-process filter for smoothing
+
+rendering con triangulos: util para superficies planas pero la mayoria de la memoria se la comen las texturas, los normal maps y los displacement maps.
+
+texturas repetidas: tradicional, poca memoria, repetitivo
+mención al megatexture: futuro, mucha memoria, realista (id tech)
+
+si al megatexture se le añaden displacement maps tenemos 2 estructuras de datos, por un lado la geometría basada en triangulos y por otro toda la info de la textura, por que usar 2 estructuras diferentes en vez de una?
+
+
+El octree:
+
+Se guarda en "blocks" zonas contiguas de memoria que guardan la topología del arbol asi como la geometría y los atributos de shading.
+
+block[ child descriptors | info section | contour data | attachments ]
+child descriptors: encodean la topología, 64 bits, 32 primeros bits son los hijos, los otros 32 está relacionado con los contours.
+contour data: geometrical shape of voxels
+attachments: atributos para el renderizado por voxel
+info section: metadatos sobre los attachments y el primer child descriptor
+
+renderizado de un voxel: ray hits voxel, se miran los atributos en los attachments, en este caso 1 color y una normal y se decide el resultado. mientras el rayo se propaga se usan los child descriptors y el contour data.
+
+
+
+
+
+
+
+
+
+
