@@ -1,4 +1,4 @@
-**Interconnections microservice**
+# Spring interconnections microservice
 
 This microservice finds flight interconnections between
 a source and a destination airport inside the provided time window.
@@ -10,37 +10,49 @@ https://api.ryanair.com/core/3/routes : provides a graph of valid routes between
 https://api.ryanair.com/timetable/3/schedules/ provides available flights between
 two airports inside a given time window.
 
-**Implementation**
+
+## Implementation
 
 The service works with Spring Boot and makes use of Guava graphs. It also
 uses the new time API from Java 8.
 
-First it retrieves all the available routes by using the routes API.
+The main **InterconnectionsService** service finds available interconnections between the given
+departure and arrival airports within a given time window. 
 
-Then it builds a directed cyclic graph of routes between airports and
-finds all the paths between the origin and destination airports of length 2
-or less.
+First the **RouteService** is used to find available paths between the origin and destination airports, only
+flights between valid paths are useful. To find paths in the graph a utility **GraphUtils** is used that contains
+a modified version of a recursive limited depth first search algorithm.
 
-After this for each path it finds all the flights that follow the edges
-of that path and that fall in the provided time window.
+The route service is launched on context startup. After that it periodically calls the ryanair routes API
+and then builds a graph with the retrieved routes. The graph is always available and updated on
+memory so that path lookups are fast.
 
-Paths of length two have can have two flights with one stop, all the possible
-flight combinations are calculated in that case.
+Once all valid paths between origin and destination are determined the **SchedulesService** 
+is used to retrieve and transform all the available **Flights** for those paths that fall in the given time window.
+To retrieve the **Flights** many calls are made asynchronously and in parallel to the ryanair schedules service. These
+calls return **MonthSchedule** and **Flight** objects which are converted to **Leg** objects taking into account all
+the timezone issues. For example some flights can arrive the day before or the day after departure in the destination timezone. They can even depart on one year and arrive the year before if they do it on the 1st of january and cross several timezones fast enough. 
 
-**Limitations**
+The timezone for each airport is retrieved through a **TimeUtils** singleton that contains a map
+from airport IATA codes to timezones. I got it from here:
+https://raw.githubusercontent.com/hroptatyr/dateutils/tzmaps/iata.tzmap
+
+Finally the **InterconnectionsService** joins all the legs into **Interconnection** objects that are returned
+to the client.
+
+## Limitations
 
 - The flight interconnections can be either direct with just one flight
 connecting the source and destination airports or they can have two flights
-making one stop at an intermediate airport.
+making one stop at an intermediate airport. Longer interconnections aren't supported
+but the code is prepared with that possibility in mind.
 
 - The time window is limited to a span of 30 days to avoid very big queries.
 
-**Improvements**
+## Improvements
 
-- The path finding algorithm is recursive it would be faster and use
-less memory by making an iterative version.
+- The path finding algorithm is recursive. An iterative version would be faster
+and use less memory.
 
-- The calls to the schedules service and the post processing can be paralellized,
-that would make the service much faster since most of the time is wasted
-waiting for the service to respond on each call.
-
+- The calls to the schedules API can be cached, that would make the service even faster at the
+expense of some memory.

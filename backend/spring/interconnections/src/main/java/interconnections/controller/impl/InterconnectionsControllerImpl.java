@@ -1,20 +1,17 @@
 package interconnections.controller.impl;
 
-import com.google.common.base.Preconditions;
+import interconnections.commons.TimeUtils;
 import interconnections.controller.InterconnectionsController;
 import interconnections.model.Interconnection;
 import interconnections.service.InterconnectionsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @RestController
@@ -36,11 +33,14 @@ public class InterconnectionsControllerImpl implements InterconnectionsControlle
             @RequestParam(value = "departureDateTime") String departureDateTime,
             @RequestParam(value = "arrivalDateTime") String arrivalDateTime) {
 
-        LocalDateTime departureDateObj;
-        LocalDateTime arrivalDateObj;
+        ZonedDateTime departureDateObj;
+        ZonedDateTime arrivalDateObj;
         try {
-            departureDateObj = LocalDateTime.parse(departureDateTime);
-            arrivalDateObj = LocalDateTime.parse(arrivalDateTime);
+            departureDateObj = ZonedDateTime.of(
+                    LocalDateTime.parse(departureDateTime), TimeUtils.zoneFromAirport(departure));
+            arrivalDateObj = ZonedDateTime.of(
+                    LocalDateTime.parse(arrivalDateTime),
+                    TimeUtils.zoneFromAirport(arrival));
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
         }
