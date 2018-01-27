@@ -35,20 +35,22 @@ the timezone issues. For example some flights can arrive the day before or the d
 
 The timezone for each airport is retrieved through a **TimeUtils** singleton that contains a map
 from airport IATA codes to timezones. I got it from here:
+
 https://raw.githubusercontent.com/hroptatyr/dateutils/tzmaps/iata.tzmap
 
 Finally the **InterconnectionsService** joins all the legs into **Interconnection** objects that are returned
 to the client.
 
-## Limitations
+## Highlights
 
-- ~~The flight interconnections can be either direct with just one flight
-connecting the source and destination airports or they can have two flights
-making one stop at an intermediate airport. Longer interconnections aren't supported
-but the code is prepared with that possibility in mind.~~ 
-(Now the code works for routes with N stops, although
-anything with more than 1 stop needs to make a lot of calls. There is one test that demonstrates N=2 working,
-it only looks for routes within one day though and it finds 9 or so in less than 30 seconds.)
+- The code is general enough to handle interconnections with N stops not just 0 or 1 stops. Anything with more than one stop makes a lot of calls though. There is one test that demonstrates N=2 working, it only looks for routes within one day and it finds 9 or so in less than 30 seconds:
+
+![alt text](doc/2stops.png "N=2 interconnection")
+
+- The calls to the schedule API are asynchronous so that many schedules for many routes can be retrieved in paralell without
+making the service wait for I/O.
+
+## Limitations
 
 - The time window is limited to a span of 30 days to avoid very big queries.
 
@@ -57,5 +59,5 @@ it only looks for routes within one day though and it finds 9 or so in less than
 - The path finding algorithm is recursive. An iterative version would be faster
 and use less memory.
 
-- The calls to the schedules API can be cached, that would make the service even faster at the
-expense of some memory.
+- The calls to the schedules API can be cached, that would make the service faster for repetitive
+or similar queries at the expense of some memory.
