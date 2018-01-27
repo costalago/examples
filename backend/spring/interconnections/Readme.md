@@ -42,10 +42,13 @@ to the client.
 
 ## Limitations
 
-- The flight interconnections can be either direct with just one flight
+- ~~The flight interconnections can be either direct with just one flight
 connecting the source and destination airports or they can have two flights
 making one stop at an intermediate airport. Longer interconnections aren't supported
-but the code is prepared with that possibility in mind.
+but the code is prepared with that possibility in mind.~~ 
+(Now the code works for routes with N stops, although
+anything with more than 1 stop needs to make a lot of calls. There is one test that demonstrates N=2 working,
+it only looks for routes within one day though and it finds 9 or so in less than 30 seconds.)
 
 - The time window is limited to a span of 30 days to avoid very big queries.
 

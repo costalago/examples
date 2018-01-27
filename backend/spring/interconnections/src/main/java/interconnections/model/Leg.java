@@ -32,11 +32,34 @@ public class Leg {
      * Calculating the arrival date is more complicated because the flight can arrive a day later
      * or even a day before the departure day. It can even arrive on the previous year!.
      *
-     * To calculate it we will compare the departure and arrival times on the destination airport timezone
+     * To calculate it we will first calculate the departure date time on the destination airport timezone
+     * and then we will calculate the difference between that date's hour and minute and
+     * the arrival hour and minute provided in the flight object. If the flight arrived on the next day
+     * this difference will be negative. In that case we have to add 24 hours to it
+     * to fix it and make it positive. Finally we add that fixed difference to the departure date time
+     * on the destination airport timezone to get the correct arrival date time.
      *
-     * For example if the time on arrival (0:30) looks like it happened before the departure time (23:50),
-     * it's because the arrival happened a day after the departure. If the time on arrival (23:50) is later
-     * than the time of departure (23:00)
+     * For example:
+     *
+     * Flight:
+     *  departure date: 2018/01/01
+     *  origin: MAD,
+     *  dest: DUB,
+     *  departure time: 22:50 (MAD timezone)
+     *  arrival time: 0:30 (DUB timezone)
+     *
+     * 1. Calculate departure datetime on MAD timezone : 2018/01/01 22:50 (MAD timezone)
+     * 2. Calculate departure datetime on DUB timezone : 2018/01/01 23:50 (DUB timezone)
+     * 3. Calculate unfixed arrival time on DUB timezone : 23:50 (DUB timezone)
+     * 4. Calculate duration between departure and arrival times in DUB timezone:
+     *  duration(23:50, 00:30) = -23:20
+     * 5. Fix duration if it's negative by adding 24 hours because we want to add it to the
+     * arrival datetime and time only goes forward:
+     *  -23:20 + 24:00 = 00:40
+     * 6. Add duration to the departure datetime on DUB timezone to obtain the correct arrival datetime:
+     * 2018/01/01 23:50 (DUB timezone) + 00:40 = 2018/01/02 00:30 (DUB timezone)
+     *
+     * The code below is commented with each step of this example.
      *
      * @param flight
      * @param departure
@@ -46,28 +69,32 @@ public class Leg {
      */
     public static Leg fromFlight(
             final Flight flight,
-            final String departure,
-            final String arrival,
+            final String departure, // MAD
+            final String arrival,   // DUB
             final LocalDate date) {
 
-        //
+        // 1. 2018/01/01 22:50 (MAD timezone)
         ZonedDateTime departureDate = ZonedDateTime.of(
                 date, LocalTime.parse(flight.getDepartureTime()), TimeUtils.zoneFromAirport(departure));
 
-        //
         LocalTime destinationTimeOnArrival = LocalTime.parse(flight.getArrivalTime());
 
+        // 2. 2018/01/01 23:50 (DUB timezone)
         ZonedDateTime destinationDateOnDeparture =
                 departureDate.withZoneSameInstant(TimeUtils.zoneFromAirport(arrival));
 
+        // 3. 23:50
         LocalTime destinationTimeOnDeparture = LocalTime.of(
                 destinationDateOnDeparture.getHour(), destinationDateOnDeparture.getMinute());
 
+        // 4. duration(23:50, 00:30) = -23:20
         Duration timeDifference = Duration.between(destinationTimeOnDeparture, destinationTimeOnArrival);
         if (timeDifference.isNegative()) {
+            // 5. -23:20 + 24:00 = 00:40
             timeDifference = timeDifference.plusHours(24);
         }
 
+        // 6. 2018/01/01 23:50 (DUB timezone) + 00:40 = 2018/01/02 00:30 (DUB timezone)
         ZonedDateTime arrivalDate = destinationDateOnDeparture.plus(timeDifference);
 
         return new Leg(departure, arrival, departureDate, arrivalDate);
