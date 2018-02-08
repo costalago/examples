@@ -5,4 +5,6 @@ Various examples and tests of different technologies
 
 algorithms: Tests and notebooks related to algorithm analysis.  
 
+backend: Tests and examples related to backend development
+
 ml/mouse_recognition: Django web application for mouse input recognition with deep neural networks. The network is a Fully Convolutional Network applied to time series classification.  
