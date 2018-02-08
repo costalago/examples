@@ -3,9 +3,7 @@ Various examples and tests of different technologies
 
 3d/octree: C++ application built as an experiment to render and build octrees in OpenGL.
 
-algorithms: Tests and notebooks related to algorithm analysis.  
-
-backend: Tests and examples related to backend development
+code_interviews: Several code interviews I did
 
 security: Security related stuff
 
