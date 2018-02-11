@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        html, body {
+            margin: 0px;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        #cartel {
+            color:red;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        #webgl {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="webgl">
+    <!--WebGL isn't supported by this browser-->
+</canvas>
+
+<!--<div id="cartel">hast.io</div>-->
+
+<!--<div id="webrtctests">-->
+<!--<div id="buttons">-->
+<!--<button id="startButton">Start</button>-->
+<!--<button id="sendButton">Send</button>-->
+<!--<button id="closeButton">Stop</button>-->
+<!--</div>-->
+
+<!--<div id="sendReceive">-->
+<!--<div id="send">-->
+<!--<h2>Send</h2>-->
+<!--<textarea id="dataChannelSend" disabled placeholder="Press Start, enter some text, then press Send."></textarea>-->
+<!--</div>-->
+<!--<div id="receive">-->
+<!--<h2>Receive</h2>-->
+<!--<textarea id="dataChannelReceive" disabled></textarea>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<script id="fragment-shader" type="x-shader/x-fragment">
+        precision mediump float;
+
+        varying vec4 vColor;
+
+        void main()
+        {
+            gl_FragColor = vColor;
+        }
+    </script>
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+        attribute vec3 aPosition;
+        attribute vec4 aColor;
+
+        uniform mat4 uModelViewMatrix;
+        uniform mat4 uProjectionMatrix;
+
+        varying vec4 vColor;
+
+        void main()
+        {
+            gl_Position = uProjectionMatrix * uModelViewMatrix * vec4(aPosition, 1);
+            vColor = aColor;
+        }
+    </script>
+
+<script src="js/pelotas.min.js"></script>
+</body>
+</html>

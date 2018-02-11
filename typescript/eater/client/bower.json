@@ -1,0 +1,22 @@
+{
+  "name": "PelotasClient",
+  "version": "0.0.0",
+  "authors": [
+    "Manuel Martín"
+  ],
+  "license": "Private",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "gl-matrix.d.ts": "chuntaro/gl-matrix.d.ts",
+    "socketio-client-v2.0.4": "",
+    "webrtc-adapter": "~0.1.4",
+    "gl-matrix": "2.3.1",
+    "jquery": "~2.1.4"
+  }
+}
